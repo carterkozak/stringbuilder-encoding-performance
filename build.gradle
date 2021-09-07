@@ -1,7 +1,7 @@
 plugins {
   id 'java-library'
-  id 'application'
   id 'eclipse'
+  id 'me.champeau.jmh' version '0.6.6'
 }
 
 repositories {
@@ -11,11 +11,6 @@ repositories {
 sourceCompatibility = 11
 
 dependencies {
-    implementation 'org.openjdk.jmh:jmh-core:1.32'
-    annotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.32'
-}
-
-
-application {
-    mainClassName = 'org.openjdk.jmh.Main'
+    jmhImplementation 'org.openjdk.jmh:jmh-core:1.32'
+    jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.32'
 }

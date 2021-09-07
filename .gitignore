@@ -3,6 +3,7 @@
 build/
 generated_src/
 src/main/generated/
+src/jmh/generated/
 
 ### Intellij ###
 .idea/
