@@ -8,8 +8,13 @@ Open via Gradle integration with Intellij
 
 ## Running
 
-You can run the benchmaks from the command line with:
-`./gradlew run`
+You can run the benchmarks from the command line with:
+
+`./gradlew jmh`
+
+Or build a jmh jar (based on instructions from the [jmh-gradle-plugin](https://github.com/melix/jmh-gradle-plugin)) which produces `build/libs/stringbuilder-encoding-performance-jmh.jar`:
+
+`./gradlew jmhJar`
 
 Alternatively via the main method in your IDE.
 
