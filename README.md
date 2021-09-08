@@ -20,18 +20,32 @@ Alternatively via the main method in your IDE.
 
 ## Existing results
 
-Initial results on f806c2c6256c14a6b303fa38eba83e7c196ac937
+Initial results on e37e7651509adf66c78bee041f62719ca2ef1cb1
 
+### Java 11
 ```
 Benchmark                                                      (charsetName)                          (message)  (timesToAppend)  Mode  Cnt    Score    Error  Units
-EncoderBenchmarks.charsetEncoder                                       UTF-8     This is a simple ASCII message                3  avgt    4   94.929 ±  1.609  ns/op
-EncoderBenchmarks.charsetEncoder                                       UTF-8  This is a message with unicode 😊                3  avgt    4  176.099 ± 14.827  ns/op
-EncoderBenchmarks.charsetEncoderWithAllocation                         UTF-8     This is a simple ASCII message                3  avgt    4  117.231 ±  5.081  ns/op
-EncoderBenchmarks.charsetEncoderWithAllocation                         UTF-8  This is a message with unicode 😊                3  avgt    4  197.668 ± 16.875  ns/op
-EncoderBenchmarks.charsetEncoderWithAllocationWrappingBuilder          UTF-8     This is a simple ASCII message                3  avgt    4  284.429 ± 12.907  ns/op
-EncoderBenchmarks.charsetEncoderWithAllocationWrappingBuilder          UTF-8  This is a message with unicode 😊                3  avgt    4  419.487 ±  5.926  ns/op
-EncoderBenchmarks.toStringGetBytes                                     UTF-8     This is a simple ASCII message                3  avgt    4   45.050 ±  7.921  ns/op
-EncoderBenchmarks.toStringGetBytes                                     UTF-8  This is a message with unicode 😊                3  avgt    4  164.701 ± 38.575  ns/op
+EncoderBenchmarks.charsetEncoder                                       UTF-8     This is a simple ASCII message                3  avgt    4   62.079 ±  4.741  ns/op
+EncoderBenchmarks.charsetEncoder                                       UTF-8  This is a message with unicode 😊                3  avgt    4  189.813 ±  6.188  ns/op
+EncoderBenchmarks.charsetEncoderWithAllocation                         UTF-8     This is a simple ASCII message                3  avgt    4   82.448 ± 18.847  ns/op
+EncoderBenchmarks.charsetEncoderWithAllocation                         UTF-8  This is a message with unicode 😊                3  avgt    4  199.352 ±  9.499  ns/op
+EncoderBenchmarks.charsetEncoderWithAllocationWrappingBuilder          UTF-8     This is a simple ASCII message                3  avgt    4  402.621 ± 22.275  ns/op
+EncoderBenchmarks.charsetEncoderWithAllocationWrappingBuilder          UTF-8  This is a message with unicode 😊                3  avgt    4  462.582 ± 37.584  ns/op
+EncoderBenchmarks.toStringGetBytes                                     UTF-8     This is a simple ASCII message                3  avgt    4   21.845 ±  0.973  ns/op
+EncoderBenchmarks.toStringGetBytes                                     UTF-8  This is a message with unicode 😊                3  avgt    4  150.277 ±  8.610  ns/op
+```
+
+### Java 17 EA (`zulu17.0.81-ea-jdk17.0.0-ea.35-linux_x64`)
+```
+Benchmark                                                      (charsetName)                          (message)  (timesToAppend)  Mode  Cnt    Score    Error  Units
+EncoderBenchmarks.charsetEncoder                                       UTF-8     This is a simple ASCII message                3  avgt    4   68.529 ±  4.686  ns/op
+EncoderBenchmarks.charsetEncoder                                       UTF-8  This is a message with unicode 😊                3  avgt    4  142.830 ± 60.421  ns/op
+EncoderBenchmarks.charsetEncoderWithAllocation                         UTF-8     This is a simple ASCII message                3  avgt    4   75.724 ±  2.927  ns/op
+EncoderBenchmarks.charsetEncoderWithAllocation                         UTF-8  This is a message with unicode 😊                3  avgt    4  151.600 ± 28.248  ns/op
+EncoderBenchmarks.charsetEncoderWithAllocationWrappingBuilder          UTF-8     This is a simple ASCII message                3  avgt    4  287.453 ± 18.314  ns/op
+EncoderBenchmarks.charsetEncoderWithAllocationWrappingBuilder          UTF-8  This is a message with unicode 😊                3  avgt    4  344.048 ±  3.704  ns/op
+EncoderBenchmarks.toStringGetBytes                                     UTF-8     This is a simple ASCII message                3  avgt    4   23.662 ±  0.792  ns/op
+EncoderBenchmarks.toStringGetBytes                                     UTF-8  This is a message with unicode 😊                3  avgt    4  122.379 ±  5.602  ns/op
 ```
 
 ### Why doesn't this match my expectations?
