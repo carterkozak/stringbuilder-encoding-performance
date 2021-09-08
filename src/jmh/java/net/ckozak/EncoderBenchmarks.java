@@ -21,7 +21,6 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 import java.util.concurrent.TimeUnit;
 
@@ -73,6 +72,33 @@ public class EncoderBenchmarks {
     }
 
     @Benchmark
+    public ByteBuffer unsafeAccess() throws CharacterCodingException {
+        ByteBuffer byteBuffer = this.byteBuffer;
+        StringBuilder stringBuilder = this.stringBuilder;
+        byteBuffer.clear();
+        if (!EncoderHelper.unsafeEncodeUTF8(stringBuilder, byteBuffer)) {
+            CharBuffer charBuffer = this.charBuffer;
+            try {
+                int limit = stringBuilder.length();
+                stringBuilder.getChars(0, limit, charBuffer.array(), charBuffer.arrayOffset());
+                charBuffer.position(0);
+                charBuffer.limit(limit);
+                EncoderHelper.encodeTo(encoder, charBuffer, byteBuffer);
+            } finally {
+                charBuffer.clear();
+            }
+        }
+        byteBuffer.flip();
+//        System.out.println("Result is: " + new String(byteBuffer.array(), byteBuffer.arrayOffset(), byteBuffer.arrayOffset() + byteBuffer.limit(), charset));
+        return byteBuffer;
+    }
+
+    @Benchmark
+    public ByteBuffer encoderStringCharArray() throws CharacterCodingException {
+        return encoder.encode(CharBuffer.wrap(stringBuilder.toString().toCharArray()));
+    }
+
+    @Benchmark
     public ByteBuffer charsetEncoderWithAllocation() throws CharacterCodingException {
         CharBuffer charBuffer = this.charBuffer;
         StringBuilder stringBuilder = this.stringBuilder;
@@ -103,33 +129,13 @@ public class EncoderBenchmarks {
             stringBuilder.getChars(0, limit, charBuffer.array(), charBuffer.arrayOffset());
             charBuffer.position(0);
             charBuffer.limit(limit);
-            encodeTo(encoder, charBuffer, byteBuffer);
+            EncoderHelper.encodeTo(encoder, charBuffer, byteBuffer);
+            byteBuffer.flip();
 //            System.out.println("Result is: " + new String(byteBuffer.array(), byteBuffer.arrayOffset(), byteBuffer.arrayOffset() + byteBuffer.limit(), charset));
             return byteBuffer;
         } finally {
             charBuffer.clear();
         }
-    }
-
-    /** Encode {@link CharBuffer} {@code in} into {@link ByteBuffer} {@code out}. */
-    public static void encodeTo(CharsetEncoder encoder, CharBuffer in, ByteBuffer out)
-            throws CharacterCodingException
-    {
-        if (in.remaining() == 0) {
-            return;
-        }
-        encoder.reset();
-        for (;;) {
-            CoderResult cr = in.hasRemaining() ?
-                    encoder.encode(in, out, true) : CoderResult.UNDERFLOW;
-            if (cr.isUnderflow())
-                cr = encoder.flush(out);
-            if (cr.isUnderflow())
-                break;
-            // throw if overflow
-            cr.throwException();
-        }
-        out.flip();
     }
 
     public static void main(String[] args) throws RunnerException {
