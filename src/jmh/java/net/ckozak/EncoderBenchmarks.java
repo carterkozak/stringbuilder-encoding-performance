@@ -74,7 +74,8 @@ public class EncoderBenchmarks {
 
     @Benchmark
     public ByteBuffer charsetEncoderWithAllocation() throws CharacterCodingException {
-        byteBuffer.clear();
+        CharBuffer charBuffer = this.charBuffer;
+        StringBuilder stringBuilder = this.stringBuilder;
         try {
             int limit = stringBuilder.length();
             stringBuilder.getChars(0, limit, charBuffer.array(), charBuffer.arrayOffset());
@@ -88,16 +89,14 @@ public class EncoderBenchmarks {
 
     @Benchmark
     public ByteBuffer charsetEncoderWithAllocationWrappingBuilder() throws CharacterCodingException {
-        byteBuffer.clear();
-        try {
-            return encoder.encode(CharBuffer.wrap(stringBuilder));
-        } finally {
-            charBuffer.clear();
-        }
+        return encoder.encode(CharBuffer.wrap(stringBuilder));
     }
 
     @Benchmark
     public ByteBuffer charsetEncoder() throws CharacterCodingException {
+        ByteBuffer byteBuffer = this.byteBuffer;
+        CharBuffer charBuffer = this.charBuffer;
+        StringBuilder stringBuilder = this.stringBuilder;
         byteBuffer.clear();
         try {
             int limit = stringBuilder.length();
