@@ -50,7 +50,7 @@ public class EncoderBenchmarks {
     public Charset charset;
     public CharsetEncoder encoder;
 
-    public StringBuilder stringBuilder = new StringBuilder(256);
+    public StringBuilder stringBuilder = new StringBuilder();
     public ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
     public CharBuffer charBuffer = CharBuffer.allocate(8192);
 
@@ -60,36 +60,28 @@ public class EncoderBenchmarks {
         encoder = charset.newEncoder()
                 .onMalformedInput(CodingErrorAction.REPLACE)
                 .onUnmappableCharacter(CodingErrorAction.REPLACE);
+        for (int i = 0; i < timesToAppend; i++) {
+            stringBuilder.append(message);
+        }
     }
 
     @Benchmark
     public byte[] toStringGetBytes() {
-        try {
-            for (int i = 0; i < timesToAppend; i++) {
-                stringBuilder.append(message);
-            }
-            byte[] result = stringBuilder.toString().getBytes(charset);
-//            System.out.println("Result is: " + new String(result, charset));
-            return result;
-        } finally {
-            stringBuilder.setLength(0);
-        }
+        byte[] result = stringBuilder.toString().getBytes(charset);
+//        System.out.println("Result is: " + new String(result, charset));
+        return result;
     }
 
     @Benchmark
     public ByteBuffer charsetEncoderWithAllocation() throws CharacterCodingException {
         byteBuffer.clear();
         try {
-            for (int i = 0; i < timesToAppend; i++) {
-                stringBuilder.append(message);
-            }
             int limit = stringBuilder.length();
             stringBuilder.getChars(0, limit, charBuffer.array(), charBuffer.arrayOffset());
             charBuffer.position(0);
             charBuffer.limit(limit);
             return encoder.encode(charBuffer);
         } finally {
-            stringBuilder.setLength(0);
             charBuffer.clear();
         }
     }
@@ -98,12 +90,8 @@ public class EncoderBenchmarks {
     public ByteBuffer charsetEncoderWithAllocationWrappingBuilder() throws CharacterCodingException {
         byteBuffer.clear();
         try {
-            for (int i = 0; i < timesToAppend; i++) {
-                stringBuilder.append(message);
-            }
             return encoder.encode(CharBuffer.wrap(stringBuilder));
         } finally {
-            stringBuilder.setLength(0);
             charBuffer.clear();
         }
     }
@@ -112,9 +100,6 @@ public class EncoderBenchmarks {
     public ByteBuffer charsetEncoder() throws CharacterCodingException {
         byteBuffer.clear();
         try {
-            for (int i = 0; i < timesToAppend; i++) {
-                stringBuilder.append(message);
-            }
             int limit = stringBuilder.length();
             stringBuilder.getChars(0, limit, charBuffer.array(), charBuffer.arrayOffset());
             charBuffer.position(0);
@@ -123,7 +108,6 @@ public class EncoderBenchmarks {
 //            System.out.println("Result is: " + new String(byteBuffer.array(), byteBuffer.arrayOffset(), byteBuffer.arrayOffset() + byteBuffer.limit(), charset));
             return byteBuffer;
         } finally {
-            stringBuilder.setLength(0);
             charBuffer.clear();
         }
     }
