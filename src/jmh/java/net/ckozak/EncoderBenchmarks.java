@@ -34,11 +34,22 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class EncoderBenchmarks {
 
-    @Param ({
-            "This is a simple ASCII message",
-            "This is a message with unicode \uD83D\uDE0A"
-    })
-    public String message;
+    public enum Message {
+        ASCII("This is a simple ASCII message", false),
+        UNICODE("This is a message with unicode \uD83D\uDE0A", false),
+        ASCII_INFLATED_BUILDER("This is a simple ASCII message", true);
+
+        private final String message;
+        private final boolean preInflateBuilder;
+
+        Message(String message, boolean preInflateBuilder) {
+            this.message = message;
+            this.preInflateBuilder = preInflateBuilder;
+        }
+    }
+
+    @Param
+    public Message message;
 
     // avoid clever inlining the string bytes directly into a result.
     @Param ({ "3" })
@@ -60,8 +71,11 @@ public class EncoderBenchmarks {
         encoder = charset.newEncoder()
                 .onMalformedInput(CodingErrorAction.REPLACE)
                 .onUnmappableCharacter(CodingErrorAction.REPLACE);
+        if (message.preInflateBuilder) {
+            stringBuilder.append("\uD83D\uDE0A").setLength(0);
+        }
         for (int i = 0; i < timesToAppend; i++) {
-            stringBuilder.append(message);
+            stringBuilder.append(message.message);
         }
     }
 
