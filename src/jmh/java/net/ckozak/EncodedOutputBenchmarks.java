@@ -36,19 +36,15 @@ public class EncodedOutputBenchmarks {
         ASCII() {
             @Override
             String message() {
-                return """
-            This is a simple ASCII message. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            """;
+                return "This is a simple ASCII message. Lorem ipsum dolor sit amet, consectetur adipiscing elit,\n" +
+                       "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n";
             }
         },
         UNICODE() {
             @Override
             String message() {
-                return """
-            This is a message with unicode 😊 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            """;
+                return "This is a message with unicode 😊 Lorem ipsum dolor sit amet, consectetur adipiscing elit,\n" +
+                       "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n";
             }
         };
 
